@@ -1,0 +1,252 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Source {
+  id                    String         @id @default(cuid())
+  name                  String         @unique
+  slug                  String         @unique
+  url                   String
+  feedUrl               String?
+  logoUrl               String?
+  region                String
+  sportFocus            String
+  parserKey             String
+  isOfficial            Boolean        @default(false)
+  isActive              Boolean        @default(true)
+  pollingIntervalMinutes Int           @default(60)
+  lastSyncedAt          DateTime?
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+
+  articles              Article[]
+  syncRuns              SyncRun[]
+  parserConfig          ParserConfig?
+  events                Event[]
+
+  @@index([slug])
+  @@index([sportFocus])
+  @@index([region])
+  @@index([isActive])
+}
+
+model Article {
+  id              String       @id @default(cuid())
+  title           String
+  slug            String       @unique
+  url             String       @unique
+  contentHash     String
+  contentHtml     String?
+  contentText     String?
+  summary         String?
+  imageUrl        String?
+  publishedAt     DateTime?
+  scrapedAt       DateTime     @default(now())
+  sport           String
+  region          String
+  category        String       @default("news")
+  isPublished       Boolean      @default(true)
+  isDuplicate       Boolean      @default(false)
+  duplicateGroupKey String?
+  sourceId          String
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  source          Source       @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  articleTags     ArticleTag[]
+
+  @@index([slug])
+  @@index([sport])
+  @@index([region])
+  @@index([category])
+  @@index([sourceId])
+  @@index([publishedAt(sort: Desc)])
+  @@index([contentHash])
+  @@index([isPublished, publishedAt(sort: Desc)])
+  @@index([duplicateGroupKey])
+}
+
+model Tag {
+  id          String       @id @default(cuid())
+  name        String       @unique
+  slug        String       @unique
+  createdAt   DateTime     @default(now())
+
+  articleTags ArticleTag[]
+
+  @@index([slug])
+}
+
+model ArticleTag {
+  id        String  @id @default(cuid())
+  articleId String
+  tagId     String
+
+  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([articleId, tagId])
+  @@index([articleId])
+  @@index([tagId])
+}
+
+model SyncRun {
+  id            String    @id @default(cuid())
+  sourceId      String
+  status        String    @default("pending")
+  articlesFound Int       @default(0)
+  articlesAdded Int       @default(0)
+  errorMessage  String?
+  startedAt     DateTime  @default(now())
+  completedAt   DateTime?
+  durationMs    Int?
+  createdAt     DateTime  @default(now())
+
+  source        Source    @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+
+  @@index([sourceId])
+  @@index([status])
+  @@index([startedAt(sort: Desc)])
+}
+
+model StoryGroup {
+  id                String    @id @default(cuid())
+  groupKey          String    @unique
+  headline          String
+  summary           String
+  sport             String?
+  region            String?
+  sourceCount       Int       @default(1)
+  primaryArticleId  String?
+  latestPublishedAt DateTime?
+  summaryProvider   String    @default("deterministic")
+  summaryHash       String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@index([groupKey])
+  @@index([latestPublishedAt(sort: Desc)])
+  @@index([sport])
+}
+
+model ParserConfig {
+  id              String   @id @default(cuid())
+  sourceId        String   @unique
+  parserType      String   @default("rss")
+  feedUrl         String?
+  selectors       Json?
+  customOptions   Json?
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  source          Source   @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+
+  @@index([sourceId])
+  @@index([parserType])
+}
+
+model Event {
+  id            String    @id @default(cuid())
+  title         String
+  slug          String    @unique
+  championship  String
+  discipline    String
+  region        String
+  country       String?
+  venue         String?
+  location      String?
+  startDate     DateTime
+  endDate       DateTime?
+  status        String    @default("upcoming")
+  description   String?
+  eventUrl      String?
+  imageUrl      String?
+  sourceId      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  source        Source?   @relation(fields: [sourceId], references: [id], onDelete: SetNull)
+  results       Result[]
+  insights      ResultInsight[]
+
+  @@index([slug])
+  @@index([startDate])
+  @@index([championship])
+  @@index([discipline])
+  @@index([status])
+  @@index([region])
+}
+
+model Result {
+  id            String   @id @default(cuid())
+  eventId       String
+  category      String
+  position      Int
+  riderName     String
+  riderCountry  String?
+  team          String?
+  manufacturer  String?
+  time          String?
+  gap           String?
+  points        Int?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  event         Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, category, position])
+  @@index([eventId, category])
+  @@index([riderName])
+}
+
+model Standing {
+  id            String   @id @default(cuid())
+  championship  String
+  discipline    String
+  season        Int
+  category      String
+  position      Int
+  riderName     String
+  riderCountry  String?
+  team          String?
+  totalPoints   Int      @default(0)
+  eventsCount   Int      @default(0)
+  wins          Int      @default(0)
+  podiums       Int      @default(0)
+  lastUpdatedAt DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([championship, season, category, riderName])
+  @@index([championship, season, category])
+  @@index([championship, season])
+  @@index([riderName])
+}
+
+model ResultInsight {
+  id            String   @id @default(cuid())
+  eventId       String?
+  championship  String
+  discipline    String
+  insightType   String
+  headline      String
+  summary       String
+  dataJson      String?
+  sourceScope   String   @default("event")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  event         Event?   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([eventId])
+  @@index([championship])
+  @@index([discipline])
+  @@index([insightType])
+  @@index([sourceScope])
+}
