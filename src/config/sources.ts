@@ -89,4 +89,16 @@ export const seedSources: SourceDefinition[] = [
     pollingIntervalMinutes: 60,
     description: "FIM Motocross World Championship — MXGP and MX2",
   },
+  {
+    name: "Race Magazine",
+    slug: "racemagazine",
+    url: "https://www.racemagazine.se",
+    feedUrl: null,
+    region: "sweden",
+    sportFocus: "general",
+    parserKey: "racemagazine",
+    isOfficial: false,
+    pollingIntervalMinutes: 60,
+    description: "Swedish motorsport journalism — motocross, enduro, and off-road",
+  },
 ];

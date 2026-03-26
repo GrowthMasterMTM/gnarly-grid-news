@@ -5,6 +5,7 @@ import { EnduroGpParser } from "./endurogp-parser";
 import { DemParser } from "./dem-parser";
 import { SuperEnduroParser } from "./superenduro-parser";
 import { MxgpParser } from "./mxgp-parser";
+import { RaceMagazineParser } from "./racemagazine-parser";
 
 const parsers: Record<string, () => Parser> = {
   svemo: () => new SvemoParser(),
@@ -20,6 +21,7 @@ const parsers: Record<string, () => Parser> = {
   dem: () => new DemParser(),
   superenduro: () => new SuperEnduroParser(),
   mxgp: () => new MxgpParser(),
+  racemagazine: () => new RaceMagazineParser(),
 };
 
 export function getParser(key: string): Parser {
