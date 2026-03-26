@@ -10,12 +10,17 @@ export const siteConfig = {
   sports: ["motocross", "enduro"] as const,
   regions: ["sweden", "europe", "usa", "global"] as const,
   nav: [
-    { label: "Home", href: "/" },
     { label: "News", href: "/news" },
     { label: "MX", href: "/mx" },
     { label: "Enduro", href: "/enduro" },
     { label: "Events", href: "/events" },
     { label: "Standings", href: "/standings" },
+  ],
+  secondaryNav: [
+    { label: "Digest", href: "/digest" },
+    { label: "Signals", href: "/signals" },
+    { label: "Official", href: "/official" },
+    { label: "Sources", href: "/sources" },
   ],
   adminNav: [
     { label: "Dashboard", href: "/admin" },
