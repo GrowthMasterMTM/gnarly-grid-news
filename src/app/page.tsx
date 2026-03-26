@@ -40,7 +40,7 @@ export default async function HomePage() {
         </p>
         <p className="mx-auto mt-4 max-w-2xl text-lg text-neutral-400">
           News, events, standings, and signals from official motorsport
-          federations across Sweden, Europe, and the US.
+          federations across the Nordics, Europe, and the US.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link
