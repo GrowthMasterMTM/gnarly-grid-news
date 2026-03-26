@@ -1,5 +1,5 @@
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://gnarlygridnews.com";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://gnarlygrid.io";
 
 export const siteConfig = {
   name: "Gnarly Grid News",
