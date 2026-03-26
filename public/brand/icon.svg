@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Background -->
+  <rect width="512" height="512" rx="64" fill="#0B0B0B"/>
+  <!-- Delta / Grid mark -->
+  <!-- Main delta triangle -->
+  <path d="M256 96L400 384H112L256 96Z" stroke="#3B82F6" stroke-width="28" fill="none" stroke-linejoin="bevel"/>
+  <!-- Signal lines cutting through -->
+  <line x1="144" y1="320" x2="368" y2="320" stroke="#3B82F6" stroke-width="8" opacity="0.5"/>
+  <line x1="176" y1="256" x2="336" y2="256" stroke="#3B82F6" stroke-width="8" opacity="0.35"/>
+  <!-- Apex accent dot -->
+  <rect x="244" y="82" width="24" height="24" fill="#3B82F6"/>
+</svg>

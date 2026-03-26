@@ -8,9 +8,24 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: siteConfig.name,
+  title: {
+    default: siteConfig.name,
+    template: `%s | ${siteConfig.name}`,
+  },
   description: siteConfig.description,
   metadataBase: new URL(siteConfig.url),
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    apple: "/apple-touch-icon.svg",
+  },
+  manifest: "/site.webmanifest",
+  openGraph: {
+    siteName: siteConfig.name,
+    type: "website",
+    locale: "en_US",
+  },
 };
 
 export default function RootLayout({

@@ -2,9 +2,9 @@ const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://gnarlygrid.io";
 
 export const siteConfig = {
-  name: "Gnarly Grid News",
+  name: "Gnarly Grid",
   description:
-    "Aggregated motocross and enduro news from official federations and top sources across Sweden, Europe, and the US.",
+    "Motorsport intelligence — motocross and enduro news, events, standings, and signals from official sources.",
   url: SITE_URL,
   locale: "en",
   sports: ["motocross", "enduro"] as const,

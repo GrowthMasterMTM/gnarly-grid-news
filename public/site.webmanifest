@@ -1,0 +1,16 @@
+{
+  "name": "Gnarly Grid",
+  "short_name": "GnarlyGrid",
+  "description": "Motorsport intelligence — motocross and enduro news aggregation",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B0B0B",
+  "theme_color": "#3B82F6",
+  "icons": [
+    {
+      "src": "/brand/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

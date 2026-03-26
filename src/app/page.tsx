@@ -3,6 +3,7 @@ import { buildMetadata } from "@/lib/seo";
 import { ArticleSection } from "@/components/article-section";
 import { StoryGroupCard } from "@/components/story-group-card";
 import { EventCard } from "@/components/event-card";
+import { LogoMark } from "@/components/logo-mark";
 import { getArticles, getStoryGroups } from "@/server/queries";
 import { getUpcomingEvents } from "@/server/events";
 
@@ -28,12 +29,18 @@ export default async function HomePage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-12">
       <section className="mb-16 text-center">
+        <div className="mb-4 flex items-center justify-center gap-3">
+          <LogoMark className="h-12 w-12" />
+        </div>
         <h1 className="text-5xl font-bold tracking-tight text-white">
-          Gnarly Grid News
+          Gnarly Grid
         </h1>
+        <p className="mx-auto mt-2 text-sm font-light uppercase tracking-[0.3em] text-blue-500">
+          Motorsport Intelligence
+        </p>
         <p className="mx-auto mt-4 max-w-2xl text-lg text-neutral-400">
-          Aggregated motocross and enduro news from official federations and top
-          sources across Sweden, Europe, and the US.
+          News, events, standings, and signals from official motorsport
+          federations across Sweden, Europe, and the US.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link

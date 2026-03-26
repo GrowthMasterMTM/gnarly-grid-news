@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 80" fill="none">
+  <g transform="translate(0, 4)">
+    <path d="M36 8L64 64H8L36 8Z" stroke="#ffffff" stroke-width="5" fill="none" stroke-linejoin="bevel"/>
+    <line x1="16" y1="52" x2="56" y2="52" stroke="#ffffff" stroke-width="2" opacity="0.5"/>
+    <line x1="22" y1="40" x2="50" y2="40" stroke="#ffffff" stroke-width="2" opacity="0.35"/>
+    <rect x="33" y="4" width="6" height="6" fill="#ffffff"/>
+  </g>
+  <text x="84" y="36" font-family="Inter, -apple-system, system-ui, sans-serif" font-weight="700" font-size="28" letter-spacing="3" fill="#ffffff">GNARLY</text>
+  <text x="84" y="66" font-family="Inter, -apple-system, system-ui, sans-serif" font-weight="300" font-size="28" letter-spacing="3" fill="#ffffff">GRID</text>
+</svg>
