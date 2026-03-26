@@ -77,4 +77,16 @@ export const seedSources: SourceDefinition[] = [
     pollingIntervalMinutes: 180,
     description: "FIM SuperEnduro World Championship",
   },
+  {
+    name: "MXGP",
+    slug: "mxgp",
+    url: "https://www.mxgp.com",
+    feedUrl: null,
+    region: "global",
+    sportFocus: "motocross",
+    parserKey: "mxgp",
+    isOfficial: true,
+    pollingIntervalMinutes: 60,
+    description: "FIM Motocross World Championship — MXGP and MX2",
+  },
 ];

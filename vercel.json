@@ -2,6 +2,7 @@
   "framework": "nextjs",
   "crons": [
     { "path": "/api/sync/svemo", "schedule": "0 6 * * *" },
+    { "path": "/api/sync/mxgp", "schedule": "30 6 * * *" },
     { "path": "/api/sync/fim", "schedule": "0 7 * * *" },
     { "path": "/api/sync/endurogp", "schedule": "0 8 * * *" },
     { "path": "/api/sync/fim-enduro", "schedule": "15 8 * * *" },
