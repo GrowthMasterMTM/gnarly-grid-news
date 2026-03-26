@@ -3,8 +3,9 @@ import { runSync } from "@/server/sync/runner";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
-export async function POST() {
+async function handler() {
   try {
     const result = await runSync("svemo");
     return NextResponse.json(result);
@@ -13,3 +14,5 @@ export async function POST() {
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
+
+export { handler as GET, handler as POST };
