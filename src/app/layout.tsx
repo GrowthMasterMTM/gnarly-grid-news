@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   description: siteConfig.description,
   metadataBase: new URL(siteConfig.url),
   verification: {
-    google: "google69041602a98217e5",
+    google: "I8uSJdX_ZOQx7Y1q1M8d9EhOXyUdpi5K5B2gMFOeF8c",
   },
   icons: {
     icon: [
