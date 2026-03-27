@@ -27,7 +27,8 @@ export interface ValidationError {
 // Block third-party ads — Gnarly Grid will build its own ad platform later.
 // ---------------------------------------------------------------------------
 
-export const AD_KEYWORDS: readonly string[] = [
+/** Always block — these words only appear in actual ads */
+export const AD_KEYWORDS_STRONG: readonly string[] = [
   "advertising",
   "advertisement",
   "advertorial",
@@ -35,8 +36,17 @@ export const AD_KEYWORDS: readonly string[] = [
   "sponsor content",
   "native ad",
   "native ads",
-  "affiliate",
   "affiliate link",
+  "paid partnership",
+  "paid post",
+  "branded content",
+  "gesponsert",
+  "commandité",
+] as const;
+
+/** Only block when article has no real content (empty stub) */
+export const AD_KEYWORDS_WEAK: readonly string[] = [
+  "affiliate",
   "annons",
   "annonsering",
   "annonssamarbete",
@@ -44,13 +54,14 @@ export const AD_KEYWORDS: readonly string[] = [
   "reklam",
   "werbung",
   "anzeige",
-  "gesponsert",
   "publicité",
-  "commandité",
   "promoted",
-  "paid partnership",
-  "paid post",
-  "branded content",
+] as const;
+
+/** Combined for DB cleanup queries */
+export const AD_KEYWORDS: readonly string[] = [
+  ...AD_KEYWORDS_STRONG,
+  ...AD_KEYWORDS_WEAK,
 ] as const;
 
 export const AD_URL_PATTERNS: readonly string[] = [
@@ -72,18 +83,26 @@ export function isAdvertisingContent(parsed: ParsedArticle): boolean {
   const titleLower = (parsed.title ?? "").toLowerCase();
   const urlLower = (parsed.url ?? "").toLowerCase();
   const categoryLower = (parsed.category ?? "").toLowerCase();
+  const hasContent = !!(parsed.contentText?.trim() || parsed.contentHtml?.trim());
 
-  // Check title for ad keywords (word-boundary aware for short words)
-  for (const kw of AD_KEYWORDS) {
+  // Strong keywords — always block regardless of content
+  for (const kw of AD_KEYWORDS_STRONG) {
     if (titleLower.includes(kw)) return true;
   }
 
-  // Check URL path segments
+  // Weak keywords — only block if article has no real content (ad stub)
+  if (!hasContent) {
+    for (const kw of AD_KEYWORDS_WEAK) {
+      if (titleLower.includes(kw)) return true;
+    }
+  }
+
+  // URL path patterns — always block
   for (const pattern of AD_URL_PATTERNS) {
     if (urlLower.includes(pattern)) return true;
   }
 
-  // Check category
+  // Category check
   if (
     categoryLower === "advertising" ||
     categoryLower === "sponsored" ||
