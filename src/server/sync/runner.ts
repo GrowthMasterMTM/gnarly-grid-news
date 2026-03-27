@@ -4,6 +4,7 @@ import { getParser } from "@/server/parsers/registry";
 import {
   normalizeArticle,
   validateParsedArticle,
+  isAdvertisingContent,
 } from "@/server/sync/normalize";
 import { checkDuplicate } from "@/server/sync/dedup";
 import { updateStoryGroups } from "@/server/groups/update-groups";
@@ -17,6 +18,7 @@ export interface SyncResult {
   articlesSkipped: number;
   articlesDuplicate: number;
   articlesInvalid: number;
+  articlesFiltered: number;
   errors: string[];
   durationMs: number;
 }
@@ -29,6 +31,7 @@ export async function runSync(sourceSlug: string): Promise<SyncResult> {
   let articlesSkipped = 0;
   let articlesDuplicate = 0;
   let articlesInvalid = 0;
+  let articlesFiltered = 0;
 
   const source = await prisma.source.findUnique({
     where: { slug: sourceSlug },
@@ -51,6 +54,12 @@ export async function runSync(sourceSlug: string): Promise<SyncResult> {
 
     for (const parsed of parseResult.articles) {
       try {
+        // Filter advertising/sponsored content first
+        if (isAdvertisingContent(parsed)) {
+          articlesFiltered++;
+          continue;
+        }
+
         // Validate before normalizing
         const validationError = validateParsedArticle(parsed);
         if (validationError) {
@@ -140,6 +149,7 @@ export async function runSync(sourceSlug: string): Promise<SyncResult> {
       articlesSkipped,
       articlesDuplicate,
       articlesInvalid,
+      articlesFiltered,
       errors,
       durationMs,
     };
@@ -168,6 +178,7 @@ export async function runSync(sourceSlug: string): Promise<SyncResult> {
       articlesSkipped,
       articlesDuplicate,
       articlesInvalid,
+      articlesFiltered,
       errors,
       durationMs,
     };
@@ -186,6 +197,7 @@ function emptyResult(
     articlesSkipped: 0,
     articlesDuplicate: 0,
     articlesInvalid: 0,
+    articlesFiltered: 0,
     errors,
     durationMs: Date.now() - start,
   };

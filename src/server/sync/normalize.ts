@@ -22,6 +22,79 @@ export interface ValidationError {
   message: string;
 }
 
+// ---------------------------------------------------------------------------
+// Advertising / sponsored content filter
+// Block third-party ads — Gnarly Grid will build its own ad platform later.
+// ---------------------------------------------------------------------------
+
+export const AD_KEYWORDS: readonly string[] = [
+  "advertising",
+  "advertisement",
+  "advertorial",
+  "sponsored",
+  "sponsor content",
+  "native ad",
+  "native ads",
+  "affiliate",
+  "affiliate link",
+  "annons",
+  "annonsering",
+  "annonssamarbete",
+  "sponsrad",
+  "reklam",
+  "werbung",
+  "anzeige",
+  "gesponsert",
+  "publicité",
+  "commandité",
+  "promoted",
+  "paid partnership",
+  "paid post",
+  "branded content",
+] as const;
+
+export const AD_URL_PATTERNS: readonly string[] = [
+  "/advertising",
+  "/advertorial",
+  "/sponsored",
+  "/native-ad",
+  "/affiliate",
+  "/annons",
+  "/werbung",
+  "/anzeige",
+] as const;
+
+/**
+ * Returns true when an article looks like third-party advertising.
+ * Checks title, URL path, and category against known ad signals.
+ */
+export function isAdvertisingContent(parsed: ParsedArticle): boolean {
+  const titleLower = (parsed.title ?? "").toLowerCase();
+  const urlLower = (parsed.url ?? "").toLowerCase();
+  const categoryLower = (parsed.category ?? "").toLowerCase();
+
+  // Check title for ad keywords (word-boundary aware for short words)
+  for (const kw of AD_KEYWORDS) {
+    if (titleLower.includes(kw)) return true;
+  }
+
+  // Check URL path segments
+  for (const pattern of AD_URL_PATTERNS) {
+    if (urlLower.includes(pattern)) return true;
+  }
+
+  // Check category
+  if (
+    categoryLower === "advertising" ||
+    categoryLower === "sponsored" ||
+    categoryLower === "annons"
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
 export function validateParsedArticle(
   parsed: ParsedArticle
 ): ValidationError | null {
@@ -35,6 +108,9 @@ export function validateParsedArticle(
     new URL(parsed.url);
   } catch {
     return { field: "url", message: `Invalid URL: ${parsed.url}` };
+  }
+  if (isAdvertisingContent(parsed)) {
+    return { field: "title", message: `Filtered as advertising: ${parsed.title}` };
   }
   return null;
 }
