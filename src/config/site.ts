@@ -1,5 +1,6 @@
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://gnarlygrid.io";
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://gnarlygrid.io")
+  .trim()
+  .replace(/\/+$/, "");
 
 export const siteConfig = {
   name: "Gnarly Grid",
